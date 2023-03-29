@@ -1,0 +1,46 @@
+---
+# tasks file for create-vpc
+
+- name: create key pair
+  ec2_key:
+    name: vpckey
+    region: us-east-1
+  register: keyout
+
+- name: display keyout info
+  debug:
+    var: keyout
+
+- name: Copy EC2 Private Key locally so it can be later on used to SSH into the instance
+  copy: 
+    content: "{{ keyout.key.private_key }}" 
+    dest: ./priv-key.pem
+  when: keyout.changed == True   
+
+- name: create VPC
+  ec2_vpc_net: 
+    name: ansible-vpc
+    cidr_block: 172.20.0.0/16
+    region: us-east-1
+    state: present
+  register: vpc
+
+- name: display vpc info
+  debug:
+    var: vpc
+
+- name: create subnet
+  ec2_vpc_subnet:
+    state: present
+    region: us-east-1
+    az: "{{ item.az }}"
+    vpc_id: "{{ vpc.vpc.id }}"
+    cidr: "{{ item.ip }}"
+    tags:
+      Name: "{{ item.name }}"
+  loop:
+    - {ip: '172.20.1.0/24', name: 'pub-sn-01', az: 'us-east-1a'}
+    - {ip: '172.20.2.0/24', name: 'pub-sn-02', az: 'us-east-1b'}
+    - {ip: '172.20.3.0/24', name: 'priv-sn-01', az: 'us-east-1a'}
+    - {ip: '172.20.4.0/24', name: 'priv-sn-02', az: 'us-east-1b'}
+

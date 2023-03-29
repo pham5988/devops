@@ -1,0 +1,34 @@
+- hosts: localhost
+  gather_facts: false
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+  tasks:
+    - name: Create key pair
+      ec2_key:
+        name: sample
+        region: us-east-1
+      register: keyout
+
+    - name: Print private key
+      debug:
+        var: keyout
+
+    - name: Save key
+      copy:
+        content: "{{keyout.key.private_key}}"
+        dest: ./sample.pem
+      when: keyout.changed == True
+
+    - name: start an instance with a public IP address
+      ec2:
+        key_name: sample
+        region: us-east-1
+        instance_type: t2.micro
+        exact_count: 1
+        image: ami-0263e4deb427da90e
+        instance_tags:
+          Name: db01
+          db: postgres
+        count_tag:
+          Name: db01
+          db: postgres 

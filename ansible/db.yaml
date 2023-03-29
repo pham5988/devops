@@ -1,0 +1,41 @@
+---
+- name: Steup DBserver
+  hosts: dbgroup
+  become: yes
+  vars:
+#    dbname: groups
+#    dbuser: devops
+#    dbpass: admin123
+
+  tasks:
+    - debug:
+        var: dbname
+    - debug:
+        msg: "Value of dbuser is {{dbuser}}"
+    - name: Install MySQL Server
+      yum: 
+        name: mariadb-server
+        state: present
+
+    - name: Install Python MySQL
+      yum:
+        name: MySQL-python
+        state: present
+
+    - name: Start & Enable MySQL
+      service:
+        name: mariadb
+        state: started
+        enabled: yes
+
+    - name: Create a new datatbase with name 'account'
+      mysql_db:
+        name: "{{dbname}}"
+        state: present
+
+    - name: Create db user with name 'admin' 
+      mysql_user:
+        name: "{{dbuser}}"
+        password: "{{dbpass}}"
+        priv: '*.*:ALL'
+        state: present

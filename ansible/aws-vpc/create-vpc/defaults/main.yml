@@ -1,0 +1,7 @@
+---
+# defaults file for create-vpc
+#- host: localhost
+#  gather-facrs: false
+#  vars:
+ansible_python_interpreter: /usr/bin/python3
+

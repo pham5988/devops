@@ -1,0 +1,7 @@
+# Variables accessible by ALL the Hosts from inventory file
+dbuser: testadmin
+dbpass: admin123
+dbname: redhat
+
+USRNAME: gameruser
+COMM: play the Witcher 3

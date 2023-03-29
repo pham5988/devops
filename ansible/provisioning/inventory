@@ -1,0 +1,19 @@
+web01 ansible_host=52.91.80.49
+web02 ansible_host=3.92.24.127
+db01 ansible_host=34.229.183.46
+
+[webgroup]
+web01
+web02
+
+[webgroup:vars]
+ansible_user=centos
+ansible_ssh_private_key_file=vprofile-key.pem
+
+[dbgroup]
+db01
+
+[dbgroup:vars]
+ansible_user=ubuntu
+ansible_ssh_private_key_file=vprofile-key.pem
+

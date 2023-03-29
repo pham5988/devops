@@ -1,0 +1,17 @@
+web01 ansible_host=
+db01 ansible_host=3.87.113.50
+
+[webgroup]
+web01
+
+[webgroup:vars]
+ansible_user=centos
+ansible_ssh_private_key_file=vprofile-key.pem
+
+[dbgroup]
+db01
+
+[dbgroup:vars]
+ansible_user=centos
+ansible_ssh_private_key_file=vprofile-key.pem
+
